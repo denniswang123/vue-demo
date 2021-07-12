@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<script src="../vue.js"></script>
+		<title>Component</title>
+	</head>
+	<body>
+		<div id="root">
+			<div>
+				<input 
+					v-model="task" 
+					type="text" 
+					placeholder="请输入任务"
+					v-on:keyup.enter="handleKeyUp"
+				/>
+			</div>
+			<ul>
+				<my-list 
+					v-for="(li, index) in list"
+					v-bind:title="li"
+					v-bind:index="index"
+					v-bind:list="list"
+					v-if="index % 2 === 0"
+				/>
+			</ul>
+		</div>
+		<script>
+			Vue.component('my-list', {
+				props: ['title', 'index', 'list'],
+				template: `
+					<li>
+						{{title}}
+						<button v-on:click="handleClick">Delete</button>
+					</li>
+				`,
+				methods: {
+					handleClick() {
+						this.list.splice(this.index, 1);
+					}
+				}
+			});
+
+			var vm = new Vue({
+				el: '#root',
+				data: {
+					task: '',
+					list: ["task 0", "task1", "task2"]
+				},
+				methods: {
+					handleKeyUp() {
+						this.list.push(this.task);
+						this.task = '';
+					},
+				}
+			});
+		</script>
+	</body>
+</html>
